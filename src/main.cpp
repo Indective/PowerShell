@@ -130,6 +130,12 @@ int main()
 
             organizer.showdirsize(dirname);
         }
+        else if(command.find("filesize") == 0)
+        {
+            filename = command.substr(9);
+
+            organizer.showfilesize(filename);
+        }
         else if(command.find("exit") == 0)
         {
             exit(0);

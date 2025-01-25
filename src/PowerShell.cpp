@@ -146,6 +146,15 @@ void powershell::searchfile(const std::string dirname)
     }
 }
 
+void powershell::showfilesize(const std::string filename)
+{
+    try{
+        std::cout << "File size : " << fs::file_size(filename) << " bytes.";
+    }catch (const fs::filesystem_error& e) {
+        std::cout << "Error: " << e.what() << "\n";
+    }
+}
+
 void powershell::showdirsize(const std::string dirname)
 {
     int total = 0;
