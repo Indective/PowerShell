@@ -14,11 +14,12 @@ public:
     void removeFile(const std::string filename);
     void changeColor(int textColor, int bgColor);
     void removeDirectory(const std::string dirname);
-    void dupFile(const std::string filename, const std::string dirname);
     void showDirectory(const std::string dirname);
     void searchfile(const std::string dirname);
     void showfilesize(const std::string filename);
     void showdirsize(const std::string dirname);
+    void copyfile(const std::string filename);
+    void renamefile(const std::string filename);
 
 };
 

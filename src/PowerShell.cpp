@@ -107,15 +107,6 @@ void powershell::removeDirectory(const std::string dirname)
     std::filesystem::remove(dirname);
 }
 
-void powershell::dupFile(const std::string filename, const std::string new_filename)
-{
-    try{
-        fs::copy_file(filename , new_filename);
-    }catch (const fs::filesystem_error& e) {
-        std::cout << "Error: " << e.what() << "\n";
-    }
-}
-
 void powershell::showDirectory(const std::string dirname)
 {
     try{
@@ -132,7 +123,7 @@ void powershell::searchfile(const std::string dirname)
 {
     std::string filename = "";
     std::cout << "\nEnter file name : ";
-    std:: cin >> filename;
+    std::getline(std::cin, filename);
     try{
         for (auto const& dir_entry : std::filesystem::directory_iterator{dirname})
         {
@@ -166,6 +157,30 @@ void powershell::showdirsize(const std::string dirname)
             std::cout << "\n" << dir_entry << " size : " << dir_entry.file_size() << " bytes.";
         }
         std::cout << "\n" << "Total folder size : " << total;
+    }catch (const fs::filesystem_error& e) {
+        std::cout << "Error: " << e.what() << "\n";
+    }
+}
+
+void powershell::copyfile(const std::string filename)
+{
+    std::string new_filenmae = "";
+    std::cout << "Enter the directory to copy the file to : ";
+    std::getline(std::cin, new_filenmae);
+    try{
+        fs::copy(filename, new_filenmae);
+    }catch (const fs::filesystem_error& e) {
+        std::cout << "Error: " << e.what() << "\n";
+    }
+}
+
+void powershell::renamefile(const std::string filename)
+{
+    std::string new_filenmae = "";
+    std::cout << "Enter the new name for the file : ";
+    std::getline(std::cin, new_filenmae);
+    try{
+        fs::rename(filename, new_filenmae);
     }catch (const fs::filesystem_error& e) {
         std::cout << "Error: " << e.what() << "\n";
     }

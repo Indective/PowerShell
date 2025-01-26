@@ -15,21 +15,22 @@ int main()
     std::string dirname;
     int textcolor;
     int bgcolor; 
-    // Get the timestamp for the current date and time
+
     time_t timestamp;
     time(&timestamp);
 
-    std::vector<std::string> commands = {"cd","mkdir","newfile","removefile","editfile","COLOR","showdir","removedir","dupfile","searchfile","dirsize","exit","date","cls","filesize","help"};
+    std::vector<std::string> commands = {"cd","mkdir","newfile","removefile","editfile","COLOR","showdir","removedir",
+    "searchfile","dirsize","exit","date","cls","filesize","copyfile","movefile","renamefile","help"};
+
     std::vector<std::string> commands_exp = {"chnages directory","creates a new directory"
     ,"creates a new .txt file","removes a pre-existing .txt file",
     "edits a pre-existing .txt file","changes foreground and background color",
     "lists all files or subdirectories in directory","deletes a directory",
-    "duplicate a file ", "searches for file in directory."
+    "searches for file in directory."
     ,"Show the size of all files in a directory and the size of the directory itself."
     ,"Terminate programm."
-    ,"shows the current date and time."
-    ,"clears the screen."
-    ,"shows the size of a file."
+    ,"shows the size of a file.","clears the screen.","shows the current date and time."
+    ,"copies a file.","moves a file.","renames a file.","copies a directory."
     ,"lists all commands with explantions"};
 
     std::cout << "\n" << "Indective Windows [Version 10.0.19045.4894]" << std::endl;
@@ -95,16 +96,6 @@ int main()
             dirname = command.substr(8);
             organizer.showDirectory(dirname);
         }
-        else if(command.find("dupfile") == 0)
-        {
-            std::cout << "Enter file name : ";
-            std::getline(std::cin , filename);
-
-            std::cout << "Enter new file name : ";
-            std::getline(std::cin , new_filename);
-
-            organizer.dupFile(filename,new_filename);
-        }
         else if(command.find("help") == 0)
         {
             for(int i = 0; i < commands.size(); i ++)
@@ -146,6 +137,18 @@ int main()
             // Display the date and time represented by the timestamp
             std::cout << ctime(&timestamp);
 
+        }
+        else if(command.find("copyfile") == 0)
+        {
+            std::string filename = command.substr(9);
+
+            organizer.copyfile(filename);
+        }
+        else if(command.find("renamefile") == 0)
+        {
+            std::string filename = command.substr(11);
+
+            organizer.renamefile(filename);
         }
         else if(command.find("cls") == 0)
         {
