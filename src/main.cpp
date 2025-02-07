@@ -133,10 +133,7 @@ int main()
         }
         else if(command.find("date") == 0)
         {
-
-            // Display the date and time represented by the timestamp
             std::cout << ctime(&timestamp);
-
         }
         else if(command.find("copyfile") == 0)
         {
