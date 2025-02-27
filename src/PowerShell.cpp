@@ -45,7 +45,6 @@ void powershell::newfile(std::string filename)
 void powershell::editfile(const std::string filename){
     std::fstream file;
 
-    // Open the file for both reading and writing without truncating
     file.open(filename, std::ios::in | std::ios::out);
 
     if (!file) {
@@ -56,21 +55,18 @@ void powershell::editfile(const std::string filename){
     std::string line;
     std::cout << "Current content of the file:\n";
     
-    // Display the current content of the file
     while (getline(file, line)) {
         std::cout << line << std::endl;
     }
 
-    // Clear the error flags and reset the position to the beginning
     file.clear();
     file.seekp(0, std::ios::beg);
 
     std::cout << "\nEnter new content (type END on a new line to finish):\n";
     std::string newContent;
-    file.clear();  // Ensure that the output position is not affected by previous input
-    file.seekp(0, std::ios::beg);  // Reset position to start of file
+    file.clear();  
+    file.seekp(0, std::ios::beg); 
 
-    // Start overwriting the file content
     while (true) {
         getline(std::cin, newContent);
         if (newContent == "END") break;
@@ -89,13 +85,10 @@ void powershell::removeFile(std::string filename)
 }
 
 void powershell::changeColor(int textColor, int bgColor) {
-    // Get the console handle
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     
-    // Calculate color attribute (foreground + background)
     int colorAttribute = (bgColor << 4) | textColor;
-    
-    // Set the color using Windows API
+
     SetConsoleTextAttribute(hConsole, colorAttribute);
 }
 
@@ -110,7 +103,7 @@ void powershell::removeDirectory(const std::string dirname)
 void powershell::showDirectory(const std::string dirname)
 {
     try{
-        for (auto const& dir_entry : std::filesystem::directory_iterator{dirname})
+        for (auto const& dir_entry : fs::directory_iterator{dirname})
         {
             std::cout << dir_entry.path() << '\n';
         }
@@ -185,5 +178,4 @@ void powershell::renamefile(const std::string filename)
         std::cout << "Error: " << e.what() << "\n";
     }
 }
-
 
