@@ -20,6 +20,9 @@ public:
     void showdirsize(const std::string dirname);
     void copyfile(const std::string filename);
     void renamefile(const std::string filename);
+    void listProcesses();
+    void killProcess(std::string processName);
+    void printProcessInfo(unsigned long pid);
 
 };
 

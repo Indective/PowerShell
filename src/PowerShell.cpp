@@ -4,6 +4,8 @@
 #include <string>
 #include <fstream>
 #include <windows.h>
+#include <tlhelp32.h>
+#include <psapi.h>
 
 namespace fs = std::filesystem;
 
@@ -179,3 +181,40 @@ void powershell::renamefile(const std::string filename)
     }
 }
 
+void powershell::listProcesses()
+{
+    system("tasklist");
+}
+
+void powershell::killProcess(std::string processName)
+{
+    std::string command = "taskkill /F /T /IM " + processName + ".exe";
+    system(command.c_str());
+}
+
+void powershell::printProcessInfo(unsigned long pid)
+{
+    HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
+    if (hProcess) {
+        TCHAR exePath[MAX_PATH];
+        if (GetModuleFileNameEx(hProcess, NULL, exePath, MAX_PATH)) {
+            std::wcout << L"Executable Path: " << exePath << std::endl;
+        }
+
+        PROCESS_MEMORY_COUNTERS pmc;
+        if (GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc))) {
+            std::cout << "Memory Usage: " << pmc.WorkingSetSize / 1024 << " KB" << std::endl;
+        }
+
+        FILETIME creationTime, exitTime, kernelTime, userTime;
+        if (GetProcessTimes(hProcess, &creationTime, &exitTime, &kernelTime, &userTime)) {
+            SYSTEMTIME sysTime;
+            FileTimeToSystemTime(&creationTime, &sysTime);
+            std::cout << "Process Start Time: " << sysTime.wHour << ":" << sysTime.wMinute << ":" << sysTime.wSecond << std::endl;
+        }
+
+        CloseHandle(hProcess);
+    } else {
+        std::cout << "Failed to open process " << pid << std::endl;
+    }
+}

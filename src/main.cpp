@@ -14,7 +14,7 @@ int main()
     time(&timestamp);
 
     std::vector<std::string> commands = {"cd","mkdir","newfile","removefile","editfile","COLOR","showdir","removedir",
-    "searchfile","dirsize","exit","date","cls","filesize","copyfile","renamefile","help"};
+    "searchfile","dirsize","exit","date","cls","filesize","copyfile","renamefile","tasklist","taskkill","pininfo","help"};
 
     std::vector<std::string> commands_exp = {"chnages directory","creates a new directory"
     ,"creates a new .txt file","removes a pre-existing .txt file",
@@ -25,12 +25,13 @@ int main()
     ,"Terminate programm."
     ,"shows the size of a file.","clears the screen.","shows the current date and time."
     ,"copies a file.","renames a file.","copies a directory."
+    ,"lists all running processes.","kills a running process."
+    ,"shows information about a running process."
     ,"lists all commands with explantions"};
 
     std::cout << "\n" << "Indective Windows [Version 10.0.19045.4894]" << std::endl;
-    std::cout << "(c) Indective Corporation. All rights reserved." << "\n";
-
-    std::string command;
+    std::cout << "(c) Indective Corporation. All rights reserved." << "\n"; 
+    std::string command; 
     std::string filename;
     std::string new_filename;
     std::string dirname;
@@ -59,6 +60,10 @@ int main()
         else if (command.substr(0,8) == "copyfile") command_code = 14;
         else if (command.substr(0,10) == "renamefile") command_code = 15;
         else if (command.substr(0,4) == "help") command_code = 16;
+        else if (command.substr(0,8) == "tasklist") command_code = 17;
+        else if (command.substr(0,8) == "taskkill") command_code = 18;
+        else if (command.substr(0,8) == "pininfo") command_code = 19;
+        else command_code = -1;
 
         std::string path;
         std::string dirName;
@@ -146,6 +151,20 @@ int main()
                 for(int i = 0; i < commands.size(); i ++){
                     std::cout << commands[i] << " - " << commands_exp[i] << std::endl;
                 }
+                break;
+            case 17:
+                organizer.listProcesses();
+                break;
+            case 18:
+                std::cout << "Enter the name of the process: ";
+                std::cin >> filename;
+                organizer.killProcess(filename);
+                break;
+            case 19:
+                unsigned long pid;
+                std::cout << "Enter the PID of the process: ";
+                std::cin >> pid;
+                organizer.printProcessInfo(pid);
                 break;
             default:
                 std::cout << "Unknown command.\n";
