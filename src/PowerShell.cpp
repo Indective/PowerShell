@@ -114,17 +114,20 @@ void powershell::showDirectory(const std::string dirname)
     }
 }
 
-void powershell::searchfile(const std::string dirname)
+void powershell::searchfile(std::string dirname, const std::string filename)
 {
-    std::string filename = "";
-    std::cout << "\nEnter file name : ";
-    std::getline(std::cin, filename);
     try{
         for (auto const& dir_entry : std::filesystem::directory_iterator{dirname})
         {
-            if (dir_entry.exists())
+            if (dir_entry.is_directory())
             {
-                std::cout << "File found in : " << dirname;
+                searchfile(dir_entry.path().string(), filename);
+            }
+            else{
+                if (dir_entry.path().filename() == filename)
+                {
+                    std::cout << "File found in : " << dirname;
+                }                
             }
         }
     }catch (const fs::filesystem_error& e) {
@@ -157,13 +160,13 @@ void powershell::showdirsize(const std::string dirname)
     }
 }
 
-void powershell::copyfile(const std::string filename)
+void powershell::dupfile(const std::string filename)
 {
-    std::string new_filenmae = "";
-    std::cout << "Enter the directory to copy the file to : ";
-    std::getline(std::cin, new_filenmae);
+    std::string new_filename = "";
+    std::cout << "Enter the new file name to copy the file to : ";
+    std::getline(std::cin, new_filename);
     try{
-        fs::copy(filename, new_filenmae);
+        fs::copy_file(filename, new_filename);
     }catch (const fs::filesystem_error& e) {
         std::cout << "Error: " << e.what() << "\n";
     }
@@ -216,5 +219,17 @@ void powershell::printProcessInfo(unsigned long pid)
         CloseHandle(hProcess);
     } else {
         std::cout << "Failed to open process " << pid << std::endl;
+    }
+}
+
+void powershell::dupdir(const std::string dirname)
+{
+    std::string new_dirname = "";
+    std::cout << "Enter the new directory name : ";
+    std::getline(std::cin, new_dirname);
+    try{
+        fs::copy(dirname, new_dirname);
+    }catch (const fs::filesystem_error& e) {
+        std::cout << "Error: " << e.what() << "\n";
     }
 }

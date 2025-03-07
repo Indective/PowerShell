@@ -15,14 +15,15 @@ public:
     void changeColor(int textColor, int bgColor);
     void removeDirectory(const std::string dirname);
     void showDirectory(const std::string dirname);
-    void searchfile(const std::string dirname);
+    void searchfile(std::string dirname, const std::string filename);
     void showfilesize(const std::string filename);
     void showdirsize(const std::string dirname);
-    void copyfile(const std::string filename);
+    void dupfile(const std::string filename);
     void renamefile(const std::string filename);
     void listProcesses();
     void killProcess(std::string processName);
     void printProcessInfo(unsigned long pid);
+    void dupdir(const std::string dirname);
 
 };
 
