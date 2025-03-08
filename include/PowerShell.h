@@ -17,7 +17,7 @@ public:
     void showDirectory(const std::string dirname);
     void searchfile(std::string dirname, const std::string filename);
     void showfilesize(const std::string filename);
-    void showdirsize(const std::string dirname);
+    int showdirsize(const std::string dirname);
     void dupfile(const std::string filename);
     void renamefile(const std::string filename);
     void listProcesses();

@@ -144,20 +144,28 @@ void powershell::showfilesize(const std::string filename)
     }
 }
 
-void powershell::showdirsize(const std::string dirname)
+int powershell::showdirsize(const std::string dirname)
 {
     int total = 0;
-    std::cout << dirname;
     try{
         for (auto const& dir_entry : std::filesystem::directory_iterator{dirname})
         {
-            total = total + dir_entry.file_size();
-            std::cout << "\n" << dir_entry << " size : " << dir_entry.file_size() << " bytes.";
+            if (dir_entry.is_directory())
+            {
+                total += showdirsize(dir_entry.path().string());
+            }
+            else
+            {
+                total += dir_entry.file_size();
+                std::cout << std::endl << dir_entry.path() 
+                          << " size : " << dir_entry.file_size() << " bytes." << std::endl;
+                std::cout << "Total size : " << total << " bytes." << std::endl;
+            }
         }
-        std::cout << "\n" << "Total folder size : " << total;
-    }catch (const fs::filesystem_error& e) {
+    } catch (const fs::filesystem_error& e) {
         std::cout << "Error: " << e.what() << "\n";
     }
+    return total;
 }
 
 void powershell::dupfile(const std::string filename)

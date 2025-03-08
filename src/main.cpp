@@ -38,6 +38,7 @@ int main()
     int textcolor;
     int bgcolor; 
     int command_code = -1;
+    int total = 0;
     while (true) {
 
         std::cout << "\n" <<  fs::current_path() <<  "> ";
@@ -162,8 +163,12 @@ int main()
                     std::cout << "Error : Command syntax error \n";
                     break;
                 }
-                dirname = command.substr(7);
-                organizer.showdirsize(dirname);
+                else
+                {
+                    dirname = command.substr(8);
+                    int size = organizer.showdirsize(dirname);
+                    std::cout << "Total size of directory : " << size << " bytes.";
+                }
                 break;
             case 10:
                 exit(0);
