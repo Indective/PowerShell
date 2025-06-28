@@ -1,14 +1,13 @@
+// initializes pre-defined functions in PowerShell.h
+// Handels all file logic
+
 #include "PowerShell.h"
 #include <iostream>
 #include <filesystem>
 #include <string>
 #include <fstream>
-#include <windows.h>
-#include <tlhelp32.h>
-#include <psapi.h>
 
 namespace fs = std::filesystem;
-
 
 void powershell::createDirectory(const std::string& dirName) {
     try {
@@ -86,14 +85,6 @@ void powershell::removeFile(std::string filename)
     puts( "File successfully deleted" );
 }
 
-void powershell::changeColor(int textColor, int bgColor) {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    
-    int colorAttribute = (bgColor << 4) | textColor;
-
-    SetConsoleTextAttribute(hConsole, colorAttribute);
-}
-
 void powershell::removeDirectory(const std::string dirname)
 {
     for (const auto& entry : std::filesystem::recursive_directory_iterator(dirname)) {
@@ -107,29 +98,33 @@ void powershell::showDirectory(const std::string dirname)
     try{
         for (auto const& dir_entry : fs::directory_iterator{dirname})
         {
-            std::cout << dir_entry.path() << '\n';
+            if (dir_entry.is_directory())
+            {   
+                std::cout << dir_entry.path() << " [DIR]" << '\n';
+                showDirectory(dir_entry.path().string());
+            }
+            else
+            {
+                std::cout << dir_entry.path() << " [FILE]" << '\n';
+            }
         }
     }catch (const fs::filesystem_error& e) {
         std::cout << "Error: " << e.what() << "\n";
     }
 }
 
-void powershell::searchfile(std::string dirname, const std::string filename)
+void powershell::searchfile(const std::string filename)
 {
     try{
-        for (auto const& dir_entry : std::filesystem::directory_iterator{dirname})
+        for (auto const& dir_entry : fs::recursive_directory_iterator{fs::current_path()})
         {
-            if (dir_entry.is_directory())
+            if (dir_entry.path().filename() == filename)
             {
-                searchfile(dir_entry.path().string(), filename);
-            }
-            else{
-                if (dir_entry.path().filename() == filename)
-                {
-                    std::cout << "File found in : " << dirname;
-                }                
+                std::cout << "File found at : " << dir_entry.path() << std::endl;
+                break;
             }
         }
+        std::cout << "File not found." << std::endl;
     }catch (const fs::filesystem_error& e) {
         std::cout << "Error: " << e.what() << "\n";
     }
@@ -189,44 +184,6 @@ void powershell::renamefile(const std::string filename)
         fs::rename(filename, new_filenmae);
     }catch (const fs::filesystem_error& e) {
         std::cout << "Error: " << e.what() << "\n";
-    }
-}
-
-void powershell::listProcesses()
-{
-    system("tasklist");
-}
-
-void powershell::killProcess(std::string processName)
-{
-    std::string command = "taskkill /F /T /IM " + processName + ".exe";
-    system(command.c_str());
-}
-
-void powershell::printProcessInfo(unsigned long pid)
-{
-    HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
-    if (hProcess) {
-        TCHAR exePath[MAX_PATH];
-        if (GetModuleFileNameEx(hProcess, NULL, exePath, MAX_PATH)) {
-            std::wcout << L"Executable Path: " << exePath << std::endl;
-        }
-
-        PROCESS_MEMORY_COUNTERS pmc;
-        if (GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc))) {
-            std::cout << "Memory Usage: " << pmc.WorkingSetSize / 1024 << " KB" << std::endl;
-        }
-
-        FILETIME creationTime, exitTime, kernelTime, userTime;
-        if (GetProcessTimes(hProcess, &creationTime, &exitTime, &kernelTime, &userTime)) {
-            SYSTEMTIME sysTime;
-            FileTimeToSystemTime(&creationTime, &sysTime);
-            std::cout << "Process Start Time: " << sysTime.wHour << ":" << sysTime.wMinute << ":" << sysTime.wSecond << std::endl;
-        }
-
-        CloseHandle(hProcess);
-    } else {
-        std::cout << "Failed to open process " << pid << std::endl;
     }
 }
 

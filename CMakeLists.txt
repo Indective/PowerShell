@@ -1,10 +1,18 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 
-project(PowerShell)
+# Project name and version
+project(nuclearsim VERSION 1.0 LANGUAGES CXX)
 
+# Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include_directories(include)
+# Define the source directory
+set(SOURCE_DIR ${CMAKE_SOURCE_DIR}/src)
 
-add_executable(PowerShell src/main.cpp src/PowerShell.cpp)
+# Include directories
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+# Add the executable
+file(GLOB_RECURSE SOURCES ${SOURCE_DIR}/*.cpp)
+add_executable(${PROJECT_NAME} ${SOURCES})

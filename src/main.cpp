@@ -1,10 +1,19 @@
+// make cls cross platform
+// showdir = dir
+// removedir = rmd
+// newfile = nf
+// removefile = rmf
+// newfile = nf
+// complete command parsing
+
 #include "PowerShell.h"
+#include "CommandParsing.h"
 #include <iostream>
 #include <string>
 #include <filesystem>
 #include <stdlib.h>
 #include <vector>
-powershell organizer;
+
 namespace fs = std::filesystem;
 
 int main() 
@@ -12,12 +21,14 @@ int main()
 
     time_t timestamp;
     time(&timestamp);
+    powershell organizer;
+    CommandParsing parser;
 
-    std::vector<std::string> commands = {"cd","mkdir","newfile","removefile","editfile","COLOR","showdir","removedir",
-    "searchfile","dirsize","exit","date","cls","filesize","dupfile","renamefile","tasklist","taskkill","pininfo","dupdir","help"};
+    std::vector<std::string> commands = {"cd","mkdir","nf","rmf","editfile","dir","rmdir",
+    "searchfile","dirsize","exit","date","cls","filesize","dupfile","renamefile","dupdir","help"};
 
     std::vector<std::string> commands_exp = {"chnages directory","creates a new directory"
-    ,"creates a new .txt file","removes a pre-existing .txt file",
+    ,"creates a new .t'xt file","removes a pre-existing .txt file",
     "edits a pre-existing .txt file","changes foreground and background color",
     "lists all files or subdirectories in directory","deletes a directory",
     "searches for file in directory."
@@ -35,37 +46,22 @@ int main()
     std::string filename;
     std::string new_filename;
     std::string dirname;
-    int textcolor;
-    int bgcolor; 
+    std::vector<std::string> tokens;
     int command_code = -1;
-    int total = 0;
     while (true) {
 
         std::cout << "\n" <<  fs::current_path() <<  "> ";
         std::getline(std::cin, command);
 
-        if (command.substr(0,5) == "mkdir") command_code = 0;
-        else if (command.substr(0,2) == "cd") command_code = 1;
-        else if (command.substr(0,7) == "newfile") command_code = 2; 
-        else if (command.substr(0,8) == "editfile") command_code = 3;
-        else if (command.substr(0,10) == "removefile") command_code = 4;
-        else if (command.substr(0,5) == "COLOR") command_code = 5;
-        else if (command.substr(0,7) == "showdir") command_code = 6;
-        else if (command.substr(0,9) == "removedir") command_code = 7;
-        else if (command.substr(0,10) == "searchfile") command_code = 8;
-        else if (command.substr(0,7) == "dirsize") command_code = 9;
-        else if (command.substr(0,7) == "exit") command_code = 10;
-        else if (command.substr(0,4) == "date") command_code = 11;
-        else if (command.substr(0,3) == "cls") command_code = 12;
-        else if (command.substr(0,8) == "filesize") command_code = 13;
-        else if (command.substr(0,8) == "dupfile") command_code = 14;
-        else if (command.substr(0,10) == "renamefile") command_code = 15;
-        else if (command.substr(0,4) == "help") command_code = 16;
-        else if (command.substr(0,8) == "tasklist") command_code = 17;
-        else if (command.substr(0,8) == "taskkill") command_code = 18;
-        else if (command.substr(0,8) == "pininfo") command_code = 19;
-        else if(command.substr(0,6) == "dupdir") command_code = 20;
-        else command_code = -1;
+        tokens = parser.tokenize(command);
+        if(parser.check_command_syntax(command,commands) == 0)
+        {
+            //Handle commands
+        }
+        else
+        {
+            parser.commandsyntax_errormsg(command,commands);
+        }
 
         std::string path;
         std::string dirName;
@@ -114,49 +110,42 @@ int main()
                 if (command.length() < 11) {
                     std::cout << "Error : Command syntax error \n";
                     break;
-                }
-                filename = command.substr(11);
-                organizer.removeFile(filename);
-                break;
-            case 5:
-                std::cout << "List of colors (Foreground & Background) \n";
-                std::cout << "0 = Black, 1 = Blue, 2 = Green, 3 = Aqua, 4 = Red, 5 = Purple, \n";
-                std::cout << "// 6 = Yellow, 7 = White, 8 = Gray, 9 = Light Blue, 10 = Light Green, \n";
-                std::cout << "// 11 = Light Aqua, 12 = Light Red, 13 = Light Purple, 14 = Light Yellow, 15 = Bright White \n";
-
-                std::cout << "Enter text color : ";
-                std::cin >> textcolor;
-
-                std::cout << "\nEnter Background color : ";
-                std::cin >> bgcolor;
-
-                organizer.changeColor(textcolor, bgcolor);
+		        }
+                else
+                {
+                    filename = command.substr(11);
+                    organizer.removeFile(filename);
+                }   
                 break;
             case 6:
                 if (command.length() < 8) {
                     std::cout << "Error : Command syntax error \n";
                     break;
                 }
-                dirname = command.substr(8);
-                organizer.showDirectory(dirname);
+                else{
+                    dirname = command.substr(8);
+                    organizer.showDirectory(dirname);
+                }
                 break;
             case 7:
                 if (command.length() < 10) {
                     std::cout << "Error : Command syntax error \n";
                     break;
                 }
-                dirname = command.substr(10);
-                organizer.removeDirectory(dirname);
+                else{
+                    dirname = command.substr(10);
+                    organizer.removeDirectory(dirname); 
+                }
                 break;
             case 8:
-                if (command.length() < 11) {
+                if (command.length() < 10) {
                     std::cout << "Error : Command syntax error \n";
                     break;
                 }
-                dirname = command.substr(11);
-                std::cout << "Enter file Name to search : ";
-                std::getline(std::cin, filename);
-                organizer.searchfile(dirname,filename);
+                else{
+                    filename = command.substr(11);
+                    organizer.searchfile(filename);
+                }
                 break;
             case 9:
                 if (command.length() < 7) {
@@ -184,51 +173,45 @@ int main()
                     std::cout << "Error : Command syntax error \n";
                     break;
                 }
-                filename = command.substr(9);
-                organizer.showfilesize(filename);
+                else{
+                    filename = command.substr(9);
+                    organizer.showfilesize(filename);
+                }
                 break;
             case 14:
                 if (command.length() < 9) {
                     std::cout << "Error : Command syntax error \n";
                     break;
                 }
-                filename = command.substr(9);
-                organizer.dupfile(filename);
+                else{
+                    filename = command.substr(9);
+                    organizer.dupfile(filename);
+                }
                 break;
             case 15:
                 if (command.length() < 11) {
                     std::cout << "Error : Command syntax error \n";
                     break;
                 }
-                filename = command.substr(11);
-                organizer.renamefile(filename);
+                else{
+                    filename = command.substr(11);
+                    organizer.renamefile(filename);
+                }
                 break;
             case 16:
                 for(int i = 0; i < commands.size(); i ++){
                     std::cout << commands[i] << " - " << commands_exp[i] << std::endl;
                 }
                 break;
-            case 17:
-                organizer.listProcesses();
-                break;
-            case 18:
-                std::cout << "Enter the name of the process: ";
-                std::cin >> filename;
-                organizer.killProcess(filename);
-                break;
-            case 19:
-                unsigned long pid;
-                std::cout << "Enter PID : ";
-                std::cin >> pid;
-                organizer.printProcessInfo(pid);
-                break;
             case 20:
                 if (command.length() < 7) {
                     std::cout << "Error : Command syntax error \n";
                     break;
                 }
-                dirname = command.substr(7);
-                organizer.dupdir(dirname);
+                else{
+                    dirname = command.substr(7);
+                    organizer.dupdir(dirname);
+                }
                 break;
             default:
                 std::cout << "Unknown command.\n";
