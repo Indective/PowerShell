@@ -3,6 +3,8 @@
 #include <vector>
 #include <iomanip> // for std::quoted
 #include <sstream>
+#include <unordered_map>
+#include <functional>
 
 std::vector<std::string> CommandParsing::tokenize(const std::string &command)
 {
@@ -26,9 +28,9 @@ int CommandParsing::check_command_syntax(const std::string &command, const std::
     std::vector<std::string> tokens = tokenize(command);
     bool command_found = false;
 
-    for (auto commmand : commands)
+    for (auto i : commands)
     {
-        if(tokens[0] == command) // Validate command : tokens[0] must match a known command
+        if(tokens[0] == i) // Validate command : tokens[0] must match a known command
         {
             command_found = true;
         }
@@ -58,5 +60,13 @@ void CommandParsing::commandsyntax_errormsg(const std::string &command, const st
     else if (error_type == 2)
     {
         std::cerr << "Command Does Not Contain a Postional Argument." << std::endl;
+    }
+}
+
+void CommandParsing::excute_command(std::vector<std::string> tokens, std::unordered_map<std::string, std::function<void(const std::string)>> command_map)
+{
+    if(command_map.find(tokens[0]) != command_map.end())
+    {
+        command_map[tokens[0]](tokens[1]);
     }
 }

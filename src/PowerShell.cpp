@@ -9,7 +9,7 @@
 
 namespace fs = std::filesystem;
 
-void powershell::createDirectory(const std::string& dirName) {
+void powershell::createDirectory(const std::string dirName) {
     try {
         if (fs::create_directory(dirName)) {
             std::cout << "Directory created: " << dirName << "\n";
@@ -21,7 +21,7 @@ void powershell::createDirectory(const std::string& dirName) {
     }
 }
 
-void powershell::changeDirectory(const std::string& path) {
+void powershell::changeDirectory(const std::string path) {
     try {
         fs::current_path(path);
         std::cout << "Changed directory to: " << fs::current_path() << "\n";
@@ -197,4 +197,17 @@ void powershell::dupdir(const std::string dirname)
     }catch (const fs::filesystem_error& e) {
         std::cout << "Error: " << e.what() << "\n";
     }
+}
+
+void powershell::exit(const std::string name)
+{
+    exit(0);
+}
+
+void powershell::showDate(const std::string date)
+{
+    time_t timestamp;
+    time(&timestamp);
+    
+    std::cout << ctime(&timestamp);
 }

@@ -7,8 +7,8 @@
 class powershell {
 public:
 
-    void createDirectory(const std::string& dirName);
-    void changeDirectory(const std::string& path);
+    void createDirectory(const std::string dirName);
+    void changeDirectory(const std::string path);
     void newfile(const std::string filename);
     void editfile(const std::string filename);
     void removeFile(const std::string filename);
@@ -20,6 +20,8 @@ public:
     void dupfile(const std::string filename);
     void renamefile(const std::string filename);
     void dupdir(const std::string dirname);
+    void exit(const std::string name);
+    void showDate(const std::string date);
 
 };
 
