@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <string>
 #include <fstream>
+#include <cstdlib> // for std::getenv and system()
 
 namespace fs = std::filesystem;
 
@@ -199,12 +200,25 @@ void powershell::dupdir(const std::string dirname)
     }
 }
 
-void powershell::exit(const std::string name)
+void powershell::cls()
 {
-    exit(0);
+    #ifdef _WIN32
+        if (std::getenv("TERM")) {
+            std::cout << "\033[2J\033[H" << std::flush;
+        } else {
+            system("cls");
+        }
+    #else
+        std::cout << "\033[2J\033[H" << std::flush;
+    #endif   
 }
 
-void powershell::showDate(const std::string date)
+void powershell::exit()
+{
+    exit();
+}
+
+void powershell::showDate()
 {
     time_t timestamp;
     time(&timestamp);

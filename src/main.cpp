@@ -46,19 +46,21 @@ int main()
     ,"lists all commands with explantions"};
 
     std::unordered_map<std::string, std::function<void(const std::string)>> command_map = {
-        {"cd", [&](const std::string arg) { organizer.changeDirectory(arg); }},
-        {"mkdir", [&](const std::string arg) { organizer.createDirectory(arg); }},
-        {"nf", [&](const std::string arg) { organizer.newfile(arg); }},
-        {"rmf", [&](const std::string arg) { organizer.removeFile(arg); }},
-        {"editfile", [&](const std::string arg) { organizer.editfile(arg); }},
-        {"dir", [&](const std::string arg) { organizer.showDirectory(arg); }},
-        {"rmdir", [&](const std::string arg) { organizer.removeDirectory(arg); }},
+        {"cd",         [&](const std::string arg) { organizer.changeDirectory(arg); }},
+        {"mkdir",      [&](const std::string arg) { organizer.createDirectory(arg); }},
+        {"nf",         [&](const std::string arg) { organizer.newfile(arg); }},
+        {"rmf",        [&](const std::string arg) { organizer.removeFile(arg); }},
+        {"editfile",   [&](const std::string arg) { organizer.editfile(arg); }},
+        {"dir",        [&](const std::string arg) { organizer.showDirectory(arg); }},
+        {"rmdir",      [&](const std::string arg) { organizer.removeDirectory(arg); }},
         {"searchfile", [&](const std::string arg) { organizer.searchfile(arg); }},
-        {"date", [&](const std::string arg) { organizer.showDate(arg); }},
-        {"filesize", [&](const std::string arg) { organizer.showfilesize(arg); }},
-        {"dupfile", [&](const std::string arg) { organizer.dupfile(arg); }},
+        {"date",       [&](const std::string)     { organizer.showDate(); }},
+        {"filesize",   [&](const std::string arg) { organizer.showfilesize(arg); }},
+        {"dupfile",    [&](const std::string arg) { organizer.dupfile(arg); }},
         {"renamefile", [&](const std::string arg) { organizer.renamefile(arg); }},
-        {"dupdir", [&](const std::string arg) { organizer.dupdir(arg); }}
+        {"dupdir",     [&](const std::string arg) { organizer.dupdir(arg); }},
+        {"exit",       [&](const std::string)     { organizer.exit(); }},
+        {"cls",        [&](const std::string)     { organizer.cls(); }},
     };
 
     std::cout << "\n" << "Indective Windows [Version 10.0.19045.4894]" << std::endl;

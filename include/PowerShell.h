@@ -20,8 +20,9 @@ public:
     void dupfile(const std::string filename);
     void renamefile(const std::string filename);
     void dupdir(const std::string dirname);
-    void exit(const std::string name);
-    void showDate(const std::string date);
+    void exit();
+    void showDate();
+    void cls();
 
 };
 
