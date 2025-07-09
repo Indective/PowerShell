@@ -7,6 +7,7 @@
 #include <string>
 #include <fstream>
 #include <cstdlib> // for std::getenv and system()
+#include <vector>
 
 namespace fs = std::filesystem;
 
@@ -211,6 +212,15 @@ void powershell::cls()
     #else
         std::cout << "\033[2J\033[H" << std::flush;
     #endif   
+}
+
+void powershell::showHelp(std::vector<std::string> &commands, std::vector<std::string> &descriptions)
+{
+    std::cout << "Available commands:\n";
+    for (size_t i = 0; i < commands.size(); ++i) {
+        std::cout << commands[i] << ": " << descriptions[i] << "\n";
+    }
+    std::cout << "Type 'exit' to quit the shell.\n";
 }
 
 void powershell::exit()

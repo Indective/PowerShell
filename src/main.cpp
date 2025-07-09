@@ -63,8 +63,7 @@ int main()
         {"cls",        [&](const std::string)     { organizer.cls(); }},
     };
 
-    std::cout << "\n" << "Indective Windows [Version 10.0.19045.4894]" << std::endl;
-    std::cout << "(c) Indective Corporation. All rights reserved." << "\n"; 
+    std::cout << "Welcome to the PowerShell-like shell!\n";
     std::vector<std::string> tokens;
     int command_code = -1;
     while (true) 
@@ -74,15 +73,11 @@ int main()
         std::getline(std::cin, command);
 
         tokens = parser.tokenize(command);
-        if(parser.check_command_syntax(command,commands) == 0)
-        {
+        if (!tokens.empty() && parser.check_command_syntax(command, commands) == 0) {
             parser.excute_command(tokens, command_map);
+        } else {
+            parser.commandsyntax_errormsg(command, commands);
         }
-        else
-        {
-            parser.commandsyntax_errormsg(command,commands);
-        }
-
     }
     
     return 0;

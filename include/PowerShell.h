@@ -1,4 +1,5 @@
 #include<iostream>
+#include <vector>
 
 #ifndef POWERSHELL_H
 #define POWERSHELL_H
@@ -23,6 +24,7 @@ public:
     void exit();
     void showDate();
     void cls();
+    void showHelp(std::vector<std::string> &commands, std::vector<std::string> &descriptions);
 
 };
 
